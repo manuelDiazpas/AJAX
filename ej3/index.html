@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ejercicio 1 ajax</title>
+  </head>
+  <body>
+    <!--    3.- Crear una página html con un <h1> ¿Sí o No?. 
+      Tendrá un botón y un p para mostrar ahí la respuesta.
+      Cuando pulsemos el botón, se conectará con la api yesno.wtf/api 
+      para obtener la respuesta Si o No. Crear otra página html2 
+      igual a la anterior, tal que al pulsar el botón, cargaremos 
+      en el resultado la imagen que devuelva
+-->
+
+    <h1>¿SÍ o NO?</h1>
+    <button id="bton">Mostrar</button>
+    <p id="siNo"></p>
+    <script>
+      let inicio = () => {
+        document.getElementById("bton").addEventListener("click", mostrarDatos);
+      };
+
+      let mostrarDatos = (e) => {
+        e.preventDefault();
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", "https://yesno.wtf/api");
+        xhr.send();
+        xhr.addEventListener("readystatechange", (e) => {
+          if (xhr.readyState !== 4) return;
+          if (xhr.status >= 200 && xhr.status < 300) {
+            console.log("éxito");
+
+            let json = JSON.parse(xhr.responseText);
+            console.log(json);
+            document.getElementById("siNo").innerHTML = json.answer;
+          } else {
+            console.log("error");
+            let message = xhr.statusText || "Ocurrió un error";
+            $xhr.innerHTML = `Error ${xhr.status}: ${message}`;
+          }
+          console.log("Este mensaje cargará de cualquier forma");
+        });
+      };
+
+      window.addEventListener("DOMContentLoaded", inicio);
+    </script>
+  </body>
+</html>

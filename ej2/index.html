@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ejercicio 1 ajax</title>
+  </head>
+  <body>
+    <!--     2.- Crear una página html con un <H1> POSTS </H1> y un botón. 
+         Cuando pulsemos un botón vamos a llamar a la api: 
+         jsonplaceholder.typicode.com/posts , y vamos a pintar el resultado 
+         en una tabla. Sacar en cada fila el title y el body, 
+         cada uno en una columna diferente.-->
+
+    <h1>GETS</h1>
+    <button id="bton">Mostrar</button>
+    <div id="tablaConteiner"></div>
+    <script>
+      let inicio = () => {
+        document.getElementById("bton").addEventListener("click", mostrarDatos);
+      };
+
+      let mostrarDatos = (e) => {
+        e.preventDefault();
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", "https://jsonplaceholder.typicode.com/posts");
+        xhr.send();
+        xhr.addEventListener("readystatechange", (e) => {
+          if (xhr.readyState !== 4) return;
+          if (xhr.status >= 200 && xhr.status < 300) {
+            console.log("éxito");
+
+            let json = JSON.parse(xhr.responseText);
+            console.log(json);
+            document.getElementById("tablaConteiner").innerHTML = "";
+            var tabla = document.createElement("table");
+            tabla.setAttribute(
+              "style",
+              "border: 1px solid black; border-collapse:collapse"
+            );
+            let cabeza = document.createElement("thead");
+            let th1 = document.createElement("th");
+            th1.setAttribute("style", "border: 1px solid black;");
+            th1.textContent = "Title";
+            cabeza.appendChild(th1);
+
+            let th2 = document.createElement("th");
+            th2.textContent = "Body";
+            th2.setAttribute("style", "border: 1px solid black;");
+            cabeza.appendChild(th2);
+            tabla.appendChild(cabeza);
+
+            var cuerpo = document.createElement("tbody");
+            json.forEach((el) => {
+              let tr1 = document.createElement("tr");
+              let valor1 = document.createElement("td");
+              valor1.textContent = el.title;
+              valor1.setAttribute("style", "border: 1px solid black;");
+              tr1.appendChild(valor1);
+
+              let valor2 = document.createElement("td");
+              valor2.textContent = el.body;
+              valor2.setAttribute("style", "border: 1px solid black;");
+              tr1.appendChild(valor2);
+              cuerpo.appendChild(tr1);
+            });
+            tabla.appendChild(cuerpo);
+            document.getElementById("tablaConteiner").appendChild(tabla);
+          } else {
+            console.log("error");
+            let message = xhr.statusText || "Ocurrió un error";
+            $xhr.innerHTML = `Error ${xhr.status}: ${message}`;
+          }
+          console.log("Este mensaje cargará de cualquier forma");
+        });
+      };
+
+      window.addEventListener("DOMContentLoaded", inicio);
+    </script>
+  </body>
+</html>
