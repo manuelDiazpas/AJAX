@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ajax</title>
+  </head>
+  <body>
+    <script>
+      /*         1.- Obtener el usuario con id=5 de jsonplaceholder.typicode.com/users.
+Mostrar los datos del usuario en distintos <p> de un div de una página html: Nombre, usuario, correo y la dirección. */
+      fetch("https://jsonplaceholder.typicode.com/users")
+        .then((response) => {
+          if (!response.ok) throw new Error("Error en la respuesta de la API");
+          return response.json(); // Convierte la respuesta en un objeto JSON
+        })
+        .then((data) => {
+          console.log(data); // Muestra todos los datos
+
+          // Buscar el post con id 5
+          const post = data.find((el) => el.id === 5);
+
+          if (post) {
+            const $div = document.createElement("div");
+
+            let p1 = document.createElement("p");
+            p1.textContent = "Nombre: " + post.name;
+            $div.appendChild(p1);
+
+            let p2 = document.createElement("p");
+            p2.textContent = "Usuario: " + post.username;
+            $div.appendChild(p2);
+
+            document.body.appendChild($div);
+
+            let p3 = document.createElement("p");
+            p3.textContent = "Email: " + post.email;
+            $div.appendChild(p3);
+
+            let p4 = document.createElement("p");
+            p4.textContent =
+              "Calle: " +
+              post.address.street +
+              ", " +
+              post.address.suite +
+              ", " +
+              post.address.city;
+            $div.appendChild(p4);
+
+            document.body.appendChild($div);
+          }
+        })
+        .catch((error) => console.log("Error:", error));
+    </script>
+  </body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ejercicio ajax</title>
+  </head>
+  <body>
+    <!--    4.- Dada la api: opentdb.com/api.php?amount=5&type=multiple,
+        mostrar una lista con todas las pistas que aparecen: 
+        Category, question y correct_answer. La etiqueta ul está creada
+        en el html, las li no. Estilos para los li (poner en js): 
+        backgroundColor: #e9e9e9, padding: 10px, 
+        margin: 5px 0, border: 1px solid #ccc, 
+        borderRadius: 4px, 
+        fontFamily: Arial, sans-serif y 
+        color: #333.
+        
+        Poner la correct_answer en negrita.
+        Poner también que al pasar por encima de alguna li, 
+        el color de fondo sea: #d1d1d1
+-->
+    <h1>Lista</h1>
+    <ul id="lista"></ul>
+    <script>
+      let inicio = (e) => {
+        e.preventDefault();
+        fetchData();
+        async function fetchData() {
+          try {
+            const response = await fetch(
+              "https://opentdb.com/api.php?amount=5&type=multiple"
+            );
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json(); // Espera y procesa el JSON
+
+            console.log(data); // Muestra todos los datos
+
+            var listaF = document.getElementById("lista");
+            data.results.forEach((el) => {
+              let valor = document.createElement("li");
+              valor.setAttribute(
+                "style",
+                ": backgroundColor: #e9e9e9; padding: 10px; margin: 5px 0; border: 1px solid #ccc; borderRadius: 4px; fontFamily: Arial, sans-serif; color: #333;"
+              );
+              valor.textContent = el.category;
+              listaF.appendChild(valor);
+
+              let valor2 = document.createElement("li");
+              valor2.setAttribute(
+                "style",
+                ": backgroundColor: #e9e9e9; padding: 10px; margin: 5px 0; border: 1px solid #ccc; borderRadius: 4px; fontFamily: Arial, sans-serif; color: #333;"
+              );
+              valor2.textContent = el.question;
+              listaF.appendChild(valor2);
+
+              let valor3 = document.createElement("li");
+              valor3.setAttribute(
+                "style",
+                ": backgroundColor: #e9e9e9; padding: 10px; margin: 5px 0; border: 1px solid #ccc; borderRadius: 4px; fontFamily: Arial, sans-serif; fontWeight: bold; color: #333;"
+              );
+              valor3.textContent = el.correct_answer;
+              listaF.appendChild(valor3);
+            });
+            let lists = document.getElementsByTagName("li");
+            lists.forEach((element) => {
+              element.addEventListener("mouseover", () => {
+                element.style.backgroundcolor = "#d1d1d1";
+              });
+            });
+          } catch (error) {
+            console.error("Error al realizar la solicitud:", error); // Manejo de errores
+          }
+        }
+      };
+
+      document.addEventListener("DOMContentLoaded", inicio);
+    </script>
+  </body>
+</html>

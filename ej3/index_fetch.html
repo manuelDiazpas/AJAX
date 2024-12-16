@@ -24,27 +24,24 @@
 
       let mostrarDatos = (e) => {
         e.preventDefault();
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET", "https://yesno.wtf/api");
-        xhr.send();
-        xhr.addEventListener("readystatechange", (e) => {
-          if (xhr.readyState !== 4) return;
-          if (xhr.status >= 200 && xhr.status < 300) {
+
+        fetch("https://yesno.wtf/api")
+          .then((response) => {
+            if (!response.ok)
+              throw new Error("Error en la respuesta de la API");
+            return response.json(); // Convierte la respuesta en un objeto JSON
+          })
+          .then((data) => {
+            console.log(data); // Muestra todos los datos
+
             console.log("éxito");
 
-            let json = JSON.parse(xhr.responseText);
-            console.log(json);
-            document.getElementById("siNo").innerHTML = json.answer;
+            document.getElementById("siNo").innerHTML = data.answer;
             let imag = document.createElement("img");
-            imag.setAttribute("src", json.image);
+            imag.setAttribute("src", data.image);
             document.getElementById("siNo").appendChild(imag);
-          } else {
-            console.log("error");
-            let message = xhr.statusText || "Ocurrió un error";
-            $xhr.innerHTML = `Error ${xhr.status}: ${message}`;
-          }
-          console.log("Este mensaje cargará de cualquier forma");
-        });
+          })
+          .catch((error) => console.log("Error:", error));
       };
 
       window.addEventListener("DOMContentLoaded", inicio);

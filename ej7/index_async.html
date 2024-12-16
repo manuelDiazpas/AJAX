@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ejercicio ajax</title>
+  </head>
+  <body>
+    <!--     7.- Obtener aleatoriamente datos de un usuario haciendo peticiones ajax sobre la api: https://randomuser.me/api/
+Necesitamos conocer: el nombre y apellidos, su correo y su ciudad. Además queremos ver su imagen.
+Crear un botón en html y una capa div. Cuando pulsemos el botón, mostraremos la información del usuario en la
+capa. Hacerlo con fetch y promesas.
+-->
+    <button id="boton">Obtener Usuario</button>
+    <div id="capa"></div>
+    <script>
+      const inicio = () => {
+        document.getElementById("boton").addEventListener("click", fetchData);
+      };
+
+      async function fetchData(e) {
+        e.preventDefault();
+        try {
+          const response = await fetch("https://randomuser.me/api/");
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json(); // Espera y procesa el JSON
+          console.log(data); // Muestra los datos obtenidos
+
+          const div = document.getElementById("capa");
+          const datos = data.results[0];
+
+          let imagen = document.createElement("img");
+          imagen.setAttribute("src", datos.picture.medium);
+          div.appendChild(imagen);
+
+          let p1 = document.createElement("p");
+          p1.textContent =
+            "Nombre: " + datos.name.first + " " + datos.name.last;
+          div.appendChild(p1);
+
+          let p2 = document.createElement("p");
+          p2.textContent = "Correo: " + datos.email;
+          div.appendChild(p2);
+
+          let p3 = document.createElement("p");
+          p3.textContent = "Ciudad: " + datos.location.city;
+          div.appendChild(p3);
+        } catch (error) {
+          console.error("Error al realizar la solicitud:", error); // Manejo de errores
+        }
+      }
+
+      window.addEventListener("DOMContentLoaded", inicio);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ejercicio ajax</title>
+  </head>
+  <body>
+    <!--    5.- Crear un fichero json en vuestro proyecto con nombre data.json.
+        
+        Crear un objeto literal students que será un array de objetos 
+        literales. Dentro de cada objeto habrá información de cada 
+        alumno:id: numero, nombre:cadena y notas, que será un array 
+        de 4 notas. 
+        
+        Crear datos para 5 alumnos en el fichero. A partir de este html:
+
+        Crear un ficheros js que haga una llamada ajax a dicho fichero y
+        crear una tabla con la información de los alumnos con 4 columnas:
+        ID , nombre, notas, que aparecerán separadas por comas y la última
+        columna será la media de notas
+-->
+    <table id="studentTable">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Grades</th>
+          <th>Average</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <script>
+      let inicio = (e) => {
+        e.preventDefault();
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", "data.json");
+        xhr.send();
+        xhr.addEventListener("readystatechange", (e) => {
+          if (xhr.readyState !== 4) return;
+          if (xhr.status >= 200 && xhr.status < 300) {
+            console.log("éxito");
+
+            let json = JSON.parse(xhr.responseText);
+            console.log(json);
+            var cuerpo = document.getElementsByTagName("tbody")[0];
+            json.Students.forEach((el) => {
+              let tr1 = document.createElement("tr");
+              let valor1 = document.createElement("td");
+              valor1.textContent = el.id;
+              tr1.appendChild(valor1);
+
+              let valor2 = document.createElement("td");
+              valor2.textContent = el.nombre;
+              tr1.appendChild(valor2);
+              cuerpo.appendChild(tr1);
+
+              let valor3 = document.createElement("td");
+              valor3.textContent = el.notas.join();
+              tr1.appendChild(valor3);
+              cuerpo.appendChild(tr1);
+
+              let valor4 = document.createElement("td");
+              var media = 0;
+              el.notas.forEach((element) => {
+                media += element;
+              });
+              media = media / el.notas.length;
+              valor4.textContent = media;
+              tr1.appendChild(valor4);
+              cuerpo.appendChild(tr1);
+            });
+          } else {
+            console.log("error");
+            let message = xhr.statusText || "Ocurrió un error";
+            $xhr.innerHTML = `Error ${xhr.status}: ${message}`;
+          }
+          console.log("Este mensaje cargará de cualquier forma");
+        });
+      };
+
+      document.addEventListener("DOMContentLoaded", inicio);
+    </script>
+  </body>
+</html>
