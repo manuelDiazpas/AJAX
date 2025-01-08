@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ajax</title>
+  </head>
+  <body>
+    <!--     7.- Obtener aleatoriamente datos de un usuario haciendo peticiones ajax sobre la api: https://randomuser.me/api/
+Necesitamos conocer: el nombre y apellidos, su correo y su ciudad. Además queremos ver su imagen.
+Crear un botón en html y una capa div. Cuando pulsemos el botón, mostraremos la información del usuario en la
+capa. Hacerlo con fetch y promesas.
+-->
+    <input type="text" name="pokemon" id="pokemon" />
+    <input type="button" id="boton" value="Obtener pokemon" /><br />
+
+    <br />
+    <main id="lista"></main>
+
+    <script>
+      const pokemon = document.getElementById("pokemon");
+
+      const lista = document.getElementById("lista");
+
+      const boton = document.getElementById("boton");
+
+      const inicio = () => {
+        boton.addEventListener("click", datos);
+      };
+
+      const datos = (e) => {
+        e.preventDefault();
+        fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.value}/`)
+          .then((response) => {
+            if (!response.ok)
+              throw new Error("Error en la respuesta de la API");
+            return response.json(); // Convierte la respuesta en un objeto JSON
+          })
+          .then((data) => {
+            console.log(data); // Muestra todos los datos
+
+            lista.innerHTML = "";
+            let h2 = document.createElement("h2");
+            h2.textContent = data.forms[0].name;
+            lista.appendChild(h2);
+
+            let capa = document.createElement("div");
+
+            let imagen = document.createElement("img");
+            imagen.setAttribute("src", data.sprites.front_default);
+            capa.appendChild(imagen);
+
+            var habilidades = document.createElement("ol");
+
+            data.abilities.forEach((element) => {
+              let valor = document.createElement("li");
+              valor.textContent = element.ability.name;
+              habilidades.appendChild(valor);
+            });
+            capa.appendChild(habilidades);
+            lista.appendChild(capa);
+          })
+          .catch((error) => console.log("Error:", error));
+      };
+
+      window.addEventListener("DOMContentLoaded", inicio);
+    </script>
+  </body>
+</html>

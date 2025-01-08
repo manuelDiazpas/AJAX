@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ejercicio ajax</title>
+  </head>
+  <body>
+    <!--     Ejercicio 1. Vamos a cargar los datos de una receta que 
+         nos devuelve la siguiente api:
+https://www.themealdb.com/api/json/v1/1/random.php. 
+
+Elegid la forma de ajax que prefiráis.
+La página html debe tener un botón que al pulsar, conectará con la api.
+Los datos a mostrar serán:
+• El título de la receta en h2
+• En una capa irá:
+◦ La imagen (atributo strMealThumb de la api)
+◦ Una lista de los ingredientes. Será una lista ordenada. Como máximo hay 20
+ingredientes, mostrar sólo los que tengan valor. (atributos strIngredientX)
+◦ Un enlace a la web de la receta. (atributo strSource). Debe abrir la web en
+otra página.
+En caso de error, mostrar en datos un mensaje “Error al obtener la receta.”
+-->
+    <main id="receta">
+      <h2>Receta Aleatoria</h2>
+    </main>
+    <br />
+    <input type="button" id="boton" value="Obtener receta aleatoria" /><br />
+
+    <script>
+      const receta = document.getElementById("receta");
+      const boton = document.getElementById("boton");
+
+      const inicio = () => {
+        boton.addEventListener("click", fetchData);
+      };
+      async function fetchData(e) {
+        e.preventDefault();
+        try {
+          const response = await fetch(
+            `https://www.themealdb.com/api/json/v1/1/random.php`
+          );
+          if (!response.ok) {
+            receta.innerHTML = "Error al obtener la receta";
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json(); // Espera y procesa el JSON
+          console.log(data); // Muestra los datos obtenidos
+          var datos = data.meals[0];
+          receta.innerHTML = "";
+
+          let h2 = document.createElement("h2");
+          h2.textContent = datos.strMeal;
+          receta.appendChild(h2);
+
+          let capa = document.createElement("div");
+
+          let imagen = document.createElement("img");
+          imagen.setAttribute("src", datos.strMealThumb);
+          capa.appendChild(imagen);
+
+          var lista = document.createElement("ol");
+
+          for (let index = 1; index <= 20; index++) {
+            let valor = document.createElement("li");
+
+            if (datos[`strIngredient${index}`].trim() != "") {
+              //Trim se usa para eliminar los espacios en blanco innecesarios
+              /*Para coger el objeto strIngridient se usan corchetes para juntarlo con el idnex*/
+              valor.textContent = datos[`strIngredient${index}`];
+              lista.appendChild(valor);
+            }
+          }
+          capa.appendChild(lista);
+
+          let web = document.createElement("a");
+          web.setAttribute("href", datos.strSource);
+          web.textContent = "Web de la receta";
+          capa.appendChild(web);
+
+          receta.appendChild(capa);
+        } catch (error) {
+          console.error("Error al realizar la solicitud:", error); // Manejo de errores
+        }
+      }
+
+      window.addEventListener("DOMContentLoaded", inicio);
+    </script>
+  </body>
+</html>
